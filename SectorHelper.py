@@ -5,6 +5,26 @@ class SectorHelper:
     sector_size = 16
     sector_cache = {}
 
+    def clearCache(self) -> None:
+        """
+        Clears the sector cache.
+        """
+
+        self.sector_cache = {}
+
+
+    def removeFromCache(self, x: int, y: int) -> None:
+        """
+        Removes the sector at the given coordinates (x, y) from the cache.
+
+        Args:
+        - x (int): The x-coordinate of the sector.
+        - y (int): The y-coordinate of the sector.
+        """
+
+        if f"{x},{y}" in self.sector_cache.keys():
+            del self.sector_cache[f"{x},{y}"]
+
     def createSector(self, x: int, y: int) -> None:
         """
         Creates a new sector at the given coordinates (x, y) if it doesn't exist yet.
@@ -87,4 +107,5 @@ class SectorHelper:
         scoord_y = y // self.sector_size
         sector = db_handler.DB_Handler.getSector(scoord_x, scoord_y)
         sector.pixels[f"{x},{y}"] = color # type: ignore
+        self.removeFromCache(scoord_x, scoord_y)
         db_handler.DB_Handler.updateSector(sector)
