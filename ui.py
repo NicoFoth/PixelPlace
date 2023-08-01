@@ -9,7 +9,7 @@ sector_helper = SectorHelper.SectorHelper()
 # Set up the window
 window_size = (1200, 1000)
 screen = pygame.display.set_mode(window_size)
-pygame.display.set_caption("Grid Example")
+pygame.display.set_caption("PixelPlace by Nico Foth")
 
 # Set up the grid
 cell_size = (25, 25)
@@ -23,6 +23,12 @@ frame_counter = 0
 sector_helper.getSectors(["0,0", "1,0", "0,1", "1,1"])
 topLeftCell = [0, 0]
 
+currentViewport = []
+
+def updateViewport(topLeftCell: list, bottomRightCell: list):
+    currentViewport.clear()
+    currentViewport.extend(sector_helper.getSectorsInViewport(topLeftCell[0], topLeftCell[1], bottomRightCell[0], bottomRightCell[1]))
+
 # Main game loop
 running = True
 while running:
@@ -32,8 +38,8 @@ while running:
             running = False
         elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             x, y = event.pos
-            x = x // cell_size[0]
-            y = y // cell_size[1]
+            x = x // cell_size[0] + topLeftCell[0]
+            y = y // cell_size[1] + topLeftCell[1]
             sector_helper.drawPixel(x, y, (0, 255, 0))
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
@@ -48,18 +54,18 @@ while running:
     # Clear the screen
     screen.fill(white)
 
-    bottomRightCell = (grid_size[0]+topLeftCell[0], grid_size[1]+topLeftCell[1])
+    bottomRightCell = [grid_size[0]+topLeftCell[0], grid_size[1]+topLeftCell[1]]
 
-    if frame_counter % 60 == 0:
-        sector_helper.getSectorsInViewport(topLeftCell[0], topLeftCell[1], bottomRightCell[0], bottomRightCell[1])
+    if frame_counter % 300 == 0:
+        updateViewport(topLeftCell, bottomRightCell)
 
-    for sector in sector_helper.sector_cache.values():
+    for sector in currentViewport:
         for pixel in sector.pixels:
             x, y = pixel.split(",")
             x = int(x)
             y = int(y)
             color = tuple(sector.pixels[pixel])
-            rect = pygame.Rect(x * cell_size[0], y * cell_size[1], cell_size[0], cell_size[1])
+            rect = pygame.Rect((x-topLeftCell[0]) * cell_size[0], (y-topLeftCell[1]) * cell_size[1], cell_size[0], cell_size[1])
             pygame.draw.rect(screen, color, rect, 0)
 
     # Draw the grid
@@ -72,7 +78,7 @@ while running:
     pygame.display.flip()
 
     frame_counter += 1
-    frame_counter %= 60
+    frame_counter %= 300
 # Clean up
 pygame.quit()
 
