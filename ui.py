@@ -25,7 +25,8 @@ topLeftCell = [0, 0]
 
 currentViewport = []
 
-def updateViewport(topLeftCell: list, bottomRightCell: list):
+def updateViewport(topLeftCell: list):
+    bottomRightCell = [grid_size[0]+topLeftCell[0], grid_size[1]+topLeftCell[1]]
     currentViewport.clear()
     currentViewport.extend(sector_helper.getSectorsInViewport(topLeftCell[0], topLeftCell[1], bottomRightCell[0], bottomRightCell[1]))
 
@@ -54,10 +55,8 @@ while running:
     # Clear the screen
     screen.fill(white)
 
-    bottomRightCell = [grid_size[0]+topLeftCell[0], grid_size[1]+topLeftCell[1]]
-
-    if frame_counter % 300 == 0:
-        updateViewport(topLeftCell, bottomRightCell)
+    if frame_counter % 60 == 0:
+        updateViewport(topLeftCell)
 
     for sector in currentViewport:
         for pixel in sector.pixels:
