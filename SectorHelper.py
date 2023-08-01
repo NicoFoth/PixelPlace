@@ -88,10 +88,41 @@ class SectorHelper:
             new_sectors = db_handler.DB_Handler.getSectors(to_retrieve)
         
             for sector in new_sectors:
-                self.sector_cache[f"{sector.scoord_x},{sector.scoord_y}"] = sector
-                sectors.append(sector)
+                if sector is not None:
+                    self.sector_cache[f"{sector.scoord_x},{sector.scoord_y}"] = sector
+                    sectors.append(sector)
 
         return sectors
+    
+    def getSectorsInViewport(self, min_x: int, min_y: int, max_x: int, max_y: int) -> list:
+        """
+        Returns a list of sectors that are within the given viewport.
+
+        Args:
+        - min_x (int): The minimum x-coordinate of the viewport.
+        - min_y (int): The minimum y-coordinate of the viewport.
+        - max_x (int): The maximum x-coordinate of the viewport.
+        - max_y (int): The maximum y-coordinate of the viewport.
+
+        Returns:
+        - list: A list of sectors.
+        """
+
+        min_scoord_x = min_x // self.sector_size
+        min_scoord_y = min_y // self.sector_size
+        max_scoord_x = max_x // self.sector_size
+        max_scoord_y = max_y // self.sector_size
+
+        x_range = range(min_scoord_x, max_scoord_x + 1)
+        y_range = range(min_scoord_y, max_scoord_y + 1)
+
+        sector_list = []
+
+        for x in x_range:
+            for y in y_range:
+                sector_list.append(f"{x},{y}")
+
+        return self.getSectors(sector_list)
 
     def drawPixel(self, x: int, y: int, color: tuple) -> None:
         """
@@ -106,6 +137,9 @@ class SectorHelper:
         scoord_x = x // self.sector_size
         scoord_y = y // self.sector_size
         sector = db_handler.DB_Handler.getSector(scoord_x, scoord_y)
+        if sector is None:
+            self.createSector(scoord_x, scoord_y)
+            sector = db_handler.DB_Handler.getSector(scoord_x, scoord_y)
         sector.pixels[f"{x},{y}"] = color # type: ignore
         self.removeFromCache(scoord_x, scoord_y)
         db_handler.DB_Handler.updateSector(sector)
