@@ -1,14 +1,14 @@
-import firebase_admin
-from firebase_admin import firestore
-from firebase_admin import credentials
-import fireo
+import os
+import firebase_admin, fireo
+from firebase_admin import firestore, credentials
 import Sector
 
-cred = credentials.Certificate("/home/nicof/Downloads/gcp_key.json")
-firebase_admin.initialize_app(cred)
+cwd = os.getcwd() + "/gcp_key.json"
 
+cred = credentials.Certificate(cwd)
+firebase_admin.initialize_app(cred)
 db = firestore.client()
-fireo.connection(from_file="/home/nicof/Downloads/gcp_key.json")
+fireo.connection(from_file=cwd)
 
 
 class DB_Handler():
