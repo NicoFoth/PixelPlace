@@ -20,7 +20,6 @@ white = (255, 255, 255)
 black = (0, 0, 0)
 
 frame_counter = 0
-sector_helper.getSectors(["0,0", "1,0", "0,1", "1,1"])
 topLeftCell = [0, 0]
 
 currentViewport = []
