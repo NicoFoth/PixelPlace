@@ -26,10 +26,17 @@ topLeftCell = [0, 0]
 currentViewport = []
 current_pixel_color = 0
 
-def updateViewport(topLeftCell: list):
+def updateViewport(topLeftCell: list) -> None:
     bottomRightCell = [grid_size[0]+topLeftCell[0], grid_size[1]+topLeftCell[1]]
     currentViewport.clear()
     currentViewport.extend(sector_helper.getSectorsInViewport(topLeftCell[0], topLeftCell[1], bottomRightCell[0], bottomRightCell[1]))
+
+def getCurrentCoordinates(mouse_pos: tuple):
+    x, y = mouse_pos
+    x = x // cell_size[0] + topLeftCell[0]
+    y = y // cell_size[1] + topLeftCell[1]
+    return (x, y)
+
 
 # Main game loop
 running = True
@@ -63,6 +70,8 @@ while running:
     
     # Clear the screen
     screen.fill(white)
+
+    mouse_pos = getCurrentCoordinates(pygame.mouse.get_pos())
 
     # Update the viewport every second
     if frame_counter % 60 == 0:
@@ -98,6 +107,15 @@ while running:
     # Draw the indicator for the current color
     indicator_rect = pygame.Rect(window_size[0] - color_picker_size[0] + 5, (window_size[1]-color_picker_size[1])/2 + 5 + current_pixel_color * 50, 40, 40)
     pygame.draw.rect(screen, (0, 0, 0), indicator_rect, 3)
+
+    # Draw the current coordinates
+    font = pygame.font.SysFont("Arial", 13)
+    mouse_coord_headline = font.render("Coords:", True, (0, 0, 0))
+    mouse_coord_x = font.render("x: " + str(mouse_pos[0]), True, (0, 0, 0))
+    mouse_coord_y = font.render("y: " + str(mouse_pos[1]), True, (0, 0, 0))
+    screen.blit(mouse_coord_headline, (window_size[0]-color_picker_size[0], 0))
+    screen.blit(mouse_coord_x, (window_size[0]-color_picker_size[0], 10))
+    screen.blit(mouse_coord_y, (window_size[0]-color_picker_size[0], 20))
 
     # Update the screen
     pygame.display.flip()
