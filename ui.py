@@ -18,7 +18,7 @@ pixel_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
 
 # Set up the grid
 color_picker_size = (50, 300)
-cell_size = (25, 25)
+cell_size = [25, 25]
 grid_size = ((window_size[0]-color_picker_size[0])//cell_size[0], window_size[1]//cell_size[1])
 grid_window_size = (grid_size[0]*cell_size[0], grid_size[1]*cell_size[1])
 grid_window = pygame.Surface(grid_window_size)
@@ -71,12 +71,27 @@ while running:
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 topLeftCell[0] -= 1
+                grid_window_size = (500, 500)
             elif event.key == pygame.K_RIGHT:
                 topLeftCell[0] += 1
             elif event.key == pygame.K_UP:
                 topLeftCell[1] -= 1
             elif event.key == pygame.K_DOWN:
                 topLeftCell[1] += 1
+        elif event.type == pygame.MOUSEWHEEL:
+            if event.y == 1:
+                if cell_size[0] < 50 and cell_size[1] < 50:
+                    cell_size[0] += 1
+                    cell_size[1] += 1
+            elif event.y == -1:
+                if cell_size[0] > 1 and cell_size[1] > 1:
+                    cell_size[0] -= 1
+                    cell_size[1] -= 1
+    
+
+    grid_size = ((window_size[0]-color_picker_size[0])//cell_size[0], window_size[1]//cell_size[1])
+    grid_window_size = (grid_size[0]*cell_size[0], grid_size[1]*cell_size[1])
+    grid_window = pygame.Surface(grid_window_size)
     
     # Clear the screen
     screen.fill(white)
