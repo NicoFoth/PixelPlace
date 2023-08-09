@@ -50,6 +50,8 @@ color_picker_rect = pygame.Rect(window_size[0] - color_picker_size[0], (window_s
 
 # Main game loop
 running = True
+middle_mouse_down = False
+middle_mouse_travel = [0, 0]
 while running:
     # Handle events
     for event in pygame.event.get():
@@ -68,10 +70,32 @@ while running:
                         current_pixel_color = 1
                     elif y > (window_size[1]-color_picker_size[1])/2 + 110 and y < (window_size[1]-color_picker_size[1])/2 + 140:
                         current_pixel_color = 2
+        elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 2:
+            x, y = event.pos
+            if grid_window.get_rect().collidepoint(x, y):
+                middle_mouse_down = True
+        elif event.type == pygame.MOUSEBUTTONUP and event.button == 2:
+            middle_mouse_down = False
+            middle_mouse_travel = [0, 0]
+        elif event.type == pygame.MOUSEMOTION and middle_mouse_down:
+            x, y = event.rel
+            middle_mouse_travel[0] -= x
+            middle_mouse_travel[1] -= y
+            if middle_mouse_travel[0] >= cell_size[0]:
+                topLeftCell[0] += 1
+                middle_mouse_travel[0] -= cell_size[0]
+            elif middle_mouse_travel[0] <= -cell_size[0]:
+                topLeftCell[0] -= 1
+                middle_mouse_travel[0] += cell_size[0]
+            if middle_mouse_travel[1] >= cell_size[1]:
+                topLeftCell[1] += 1
+                middle_mouse_travel[1] -= cell_size[1]
+            elif middle_mouse_travel[1] <= -cell_size[1]:
+                topLeftCell[1] -= 1
+                middle_mouse_travel[1] += cell_size[1]
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 topLeftCell[0] -= 1
-                grid_window_size = (500, 500)
             elif event.key == pygame.K_RIGHT:
                 topLeftCell[0] += 1
             elif event.key == pygame.K_UP:
@@ -92,7 +116,7 @@ while running:
     grid_size = ((window_size[0]-color_picker_size[0])//cell_size[0], window_size[1]//cell_size[1])
     grid_window_size = (grid_size[0]*cell_size[0], grid_size[1]*cell_size[1])
     grid_window = pygame.Surface(grid_window_size)
-    
+
     # Clear the screen
     screen.fill(white)
     grid_window.fill(white)
