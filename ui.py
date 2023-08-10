@@ -103,7 +103,7 @@ while running:
                     cell_size[0] += 1
                     cell_size[1] += 1
             elif event.y == -1:
-                if cell_size[0] > 1 and cell_size[1] > 1:
+                if cell_size[0] > 5 and cell_size[1] > 1:
                     cell_size[0] -= 1
                     cell_size[1] -= 1
     
@@ -135,9 +135,10 @@ while running:
             pygame.draw.rect(grid_window, color, rect, 0)
 
     # Draw the cursor
-    if grid_window.get_rect().collidepoint(mouse_pos):
-        x = mouse_pos[0] * cell_size[0]
-        y = mouse_pos[1] * cell_size[1]
+    if grid_window.get_rect().collidepoint(pygame.mouse.get_pos()):
+        x, y = pygame.mouse.get_pos()
+        x = x // cell_size[0] * cell_size[0]
+        y = y // cell_size[1] * cell_size[1]
         pygame.draw.rect(grid_window, (0, 0, 0), pygame.Rect(x, y, cell_size[0], cell_size[1]), 1)
 
     # Draw a color picker on the right side of the screen
