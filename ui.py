@@ -134,11 +134,11 @@ while running:
             rect = pygame.Rect((x-topLeftCell[0]) * cell_size[0], (y-topLeftCell[1]) * cell_size[1], cell_size[0], cell_size[1])
             pygame.draw.rect(grid_window, color, rect, 0)
 
-    # Draw the grid
-    for x in range(grid_size[0]):
-        for y in range(grid_size[1]):
-            rect = pygame.Rect(x * cell_size[0], y * cell_size[1], cell_size[0], cell_size[1])
-            pygame.draw.rect(grid_window, black, rect, 1)
+    # Draw the cursor
+    if grid_window.get_rect().collidepoint(mouse_pos):
+        x = mouse_pos[0] * cell_size[0]
+        y = mouse_pos[1] * cell_size[1]
+        pygame.draw.rect(grid_window, (0, 0, 0), pygame.Rect(x, y, cell_size[0], cell_size[1]), 1)
 
     # Draw a color picker on the right side of the screen
     pygame.draw.rect(screen, (128, 128, 128), color_picker_rect, 3)
