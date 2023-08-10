@@ -63,6 +63,18 @@ class DB_Handler():
 
         sectors = Sector.Sector.collection.get_all(sector_list)
         return sectors # type: ignore
+    
+    @staticmethod
+    def getAllSectors() -> list:
+        """
+        Returns a list of all sectors.
+
+        Returns:
+        - list: A list of sectors.
+        """
+
+        sectors = Sector.Sector.collection.fetch()
+        return sectors # type: ignore
 
     @staticmethod
     def updateSector(sector: Sector.Sector) -> None:

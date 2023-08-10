@@ -34,11 +34,6 @@ for i in range(len(pixel_colors)):
         (window_size[1]-color_picker_size[1])/2 + 10 + i * 50,
         30, 30))
 
-def updateViewport(topLeftCell: list) -> None:
-    bottomRightCell = [grid_size[0]+topLeftCell[0], grid_size[1]+topLeftCell[1]]
-    currentViewport.clear()
-    currentViewport.extend(sector_helper.getSectorsInViewport(topLeftCell[0], topLeftCell[1], bottomRightCell[0], bottomRightCell[1]))
-
 def getCurrentCoordinates(mouse_pos: tuple):
     x, y = mouse_pos
     x = x // cell_size[0] + topLeftCell[0]
@@ -124,11 +119,11 @@ while running:
     mouse_pos = getCurrentCoordinates(pygame.mouse.get_pos())
 
     # Update the viewport every second
-    if frame_counter % 60 == 0:
-        updateViewport(topLeftCell)
+    if frame_counter % 300 == 0:
+        sector_helper.getAllSectors()
 
     # Draw the pixels
-    for sector in currentViewport:
+    for sector in sector_helper.sector_cache.values():
         for pixel in sector.pixels:
             x, y = pixel.split(",")
             x = int(x)
