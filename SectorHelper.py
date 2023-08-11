@@ -2,7 +2,7 @@ import db_handler
 
 class SectorHelper:
 
-    sector_size = 16
+    sector_size = 64
     sector_cache = {}
 
     def clearCache(self) -> None:

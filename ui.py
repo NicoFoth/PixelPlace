@@ -1,11 +1,14 @@
 import pygame
 import SectorHelper
 
+sector_helper = None
+
 def startUI():
+    global sector_helper
+    sector_helper = SectorHelper.SectorHelper()
+    
     # Initialize Pygame
     pygame.init()
-
-    sector_helper = SectorHelper.SectorHelper()
 
     # Set up the window
     window_size = (1300, 1000)
