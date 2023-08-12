@@ -24,7 +24,6 @@ def createSectorObject(sector_document: Dict[str, Any]) -> db_handler.Sector.Sec
 
 
 def onSnapshot(col_snapshot: List[Any], changes: List[Any], read_time: Any) -> None:
-    print(type(read_time))
     for change in changes:
         if change.type.name == "ADDED":
             new_sector = createSectorObject(change.document.to_dict())
