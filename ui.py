@@ -11,8 +11,9 @@ def startUI():
     pygame.init()
 
     # Set up the window
-    window_size = (1300, 1000)
-    screen = pygame.display.set_mode(window_size)
+    window_size_default = (1300, 1000)
+    flags = pygame.RESIZABLE
+    screen = pygame.display.set_mode(window_size_default, flags)
     pygame.display.set_caption("PixelPlace by Nico Foth")
 
     # Set up the colors
@@ -23,20 +24,13 @@ def startUI():
     # Set up the grid
     color_picker_size = (50, 300)
     cell_size = [25, 25]
-    grid_size = ((window_size[0]-color_picker_size[0])//cell_size[0], window_size[1]//cell_size[1])
+    grid_size = ((screen.get_size()[0]-color_picker_size[0])//cell_size[0], screen.get_size()[1]//cell_size[1])
     grid_window_size = (grid_size[0]*cell_size[0], grid_size[1]*cell_size[1])
     grid_window = pygame.Surface(grid_window_size)
 
     frame_counter = 0
     topLeftCell = [0, 0]
-    currentViewport = []
     current_pixel_color = 0
-    color_rects = []
-    for i in range(len(pixel_colors)):
-        color_rects.append(pygame.Rect(
-            window_size[0] - color_picker_size[0] + 10,
-            (window_size[1]-color_picker_size[1])/2 + 10 + i * 50,
-            30, 30))
 
     def getCurrentCoordinates(mouse_pos: tuple):
         x, y = mouse_pos
@@ -45,13 +39,13 @@ def startUI():
         return (x, y)
 
 
-    color_picker_rect = pygame.Rect(window_size[0] - color_picker_size[0], (window_size[1]-color_picker_size[1])/2, color_picker_size[0], color_picker_size[1])
-
     # Main game loop
     running = True
     middle_mouse_down = False
     middle_mouse_travel = [0, 0]
     while running:
+        color_picker_rect = pygame.Rect(screen.get_size()[0] - color_picker_size[0], (screen.get_size()[1]-color_picker_size[1])/2, color_picker_size[0], color_picker_size[1])
+
         # Handle events
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -63,11 +57,11 @@ def startUI():
                     y = y // cell_size[1] + topLeftCell[1]
                     sector_helper.drawPixel(x, y, pixel_colors[current_pixel_color])
                 elif color_picker_rect.collidepoint(x, y):
-                        if y > (window_size[1]-color_picker_size[1])/2 + 10 and y < (window_size[1]-color_picker_size[1])/2 + 40:
+                        if y > (screen.get_size()[1]-color_picker_size[1])/2 + 10 and y < (screen.get_size()[1]-color_picker_size[1])/2 + 40:
                             current_pixel_color = 0
-                        elif y > (window_size[1]-color_picker_size[1])/2 + 60 and y < (window_size[1]-color_picker_size[1])/2 + 90:
+                        elif y > (screen.get_size()[1]-color_picker_size[1])/2 + 60 and y < (screen.get_size()[1]-color_picker_size[1])/2 + 90:
                             current_pixel_color = 1
-                        elif y > (window_size[1]-color_picker_size[1])/2 + 110 and y < (window_size[1]-color_picker_size[1])/2 + 140:
+                        elif y > (screen.get_size()[1]-color_picker_size[1])/2 + 110 and y < (screen.get_size()[1]-color_picker_size[1])/2 + 140:
                             current_pixel_color = 2
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 2:
                 x, y = event.pos
@@ -112,7 +106,7 @@ def startUI():
                         cell_size[1] -= 1
         
 
-        grid_size = ((window_size[0]-color_picker_size[0])//cell_size[0], window_size[1]//cell_size[1])
+        grid_size = ((screen.get_size()[0]-color_picker_size[0])//cell_size[0], screen.get_size()[1]//cell_size[1])
         grid_window_size = (grid_size[0]*cell_size[0], grid_size[1]*cell_size[1])
         grid_window = pygame.Surface(grid_window_size)
 
@@ -149,11 +143,17 @@ def startUI():
         pygame.draw.rect(screen, (128, 128, 128), color_picker_rect, 3)
 
         # Draw the color picker buttons
+        color_rects = []
+        for i in range(len(pixel_colors)):
+            color_rects.append(pygame.Rect(
+                screen.get_size()[0] - color_picker_size[0] + 10,
+                (screen.get_size()[1]-color_picker_size[1])/2 + 10 + i * 50,
+                30, 30))
         for i in range(len(color_rects)):
             pygame.draw.rect(screen, pixel_colors[i], color_rects[i], 0)
 
         # Draw the indicator for the current color
-        indicator_rect = pygame.Rect(window_size[0] - color_picker_size[0] + 5, (window_size[1]-color_picker_size[1])/2 + 5 + current_pixel_color * 50, 40, 40)
+        indicator_rect = pygame.Rect(screen.get_size()[0] - color_picker_size[0] + 5, (screen.get_size()[1]-color_picker_size[1])/2 + 5 + current_pixel_color * 50, 40, 40)
         pygame.draw.rect(screen, (0, 0, 0), indicator_rect, 3)
 
         # Draw the current coordinates
@@ -161,9 +161,9 @@ def startUI():
         mouse_coord_headline = font.render("Coords:", True, (0, 0, 0))
         mouse_coord_x = font.render("x: " + str(mouse_pos[0]), True, (0, 0, 0))
         mouse_coord_y = font.render("y: " + str(mouse_pos[1]), True, (0, 0, 0))
-        screen.blit(mouse_coord_headline, (window_size[0]-color_picker_size[0], 0))
-        screen.blit(mouse_coord_x, (window_size[0]-color_picker_size[0], 10))
-        screen.blit(mouse_coord_y, (window_size[0]-color_picker_size[0], 20))
+        screen.blit(mouse_coord_headline, (screen.get_size()[0]-color_picker_size[0], 0))
+        screen.blit(mouse_coord_x, (screen.get_size()[0]-color_picker_size[0], 10))
+        screen.blit(mouse_coord_y, (screen.get_size()[0]-color_picker_size[0], 20))
 
 
         screen.blit(grid_window, (0, 0))
