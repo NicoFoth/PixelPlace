@@ -1,11 +1,12 @@
+from typing import Dict, Tuple, Any
 from fireo import models, fields
 
 class Sector(models.Model):
 
     # Sector coordinates
-    scoord_x = fields.NumberField(required=True, int_only=True)
-    scoord_y = fields.NumberField(required=True, int_only=True)
+    scoord_x: int = fields.NumberField(required=True, int_only=True) #type: ignore
+    scoord_y: int = fields.NumberField(required=True, int_only=True) #type: ignore
     # Dictionary of pixel objects in sector
-    pixels = fields.MapField(required=True)
+    pixels: Dict[str, Tuple[int, int, int]] = fields.MapField(required=True) #type: ignore
     # Time of last update in the sector
-    last_update = fields.DateTime(required=True)
+    last_update: Any = fields.DateTime(required=True)
