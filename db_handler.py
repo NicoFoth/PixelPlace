@@ -1,4 +1,5 @@
 import os
+from typing import List
 import firebase_admin, fireo
 from firebase_admin import firestore, credentials
 import Sector
@@ -50,7 +51,7 @@ class DB_Handler():
         return sector # type: ignore
 
     @staticmethod
-    def getSectors(sector_list) -> list:
+    def getSectors(sector_list) -> List[Sector.Sector]:
         """
         Retrieves a list of sectors from the database.
 
@@ -65,7 +66,7 @@ class DB_Handler():
         return sectors # type: ignore
     
     @staticmethod
-    def getAllSectors() -> list:
+    def getAllSectors() -> List[Sector.Sector]:
         """
         Returns a list of all sectors.
 

@@ -1,9 +1,10 @@
+from typing import List, Dict, Any
 import firebase_admin
 import db_handler, ui
 
 sector_collection = db_handler.db.collection(u'sector')
 
-def createSectorObject(sector_document: dict) -> db_handler.Sector.Sector:
+def createSectorObject(sector_document: Dict[str, Any]) -> db_handler.Sector.Sector:
     """
     Creates a Sector object from a sector document.
 
@@ -22,7 +23,8 @@ def createSectorObject(sector_document: dict) -> db_handler.Sector.Sector:
     return sector
 
 
-def onSnapshot(col_snapshot, changes, read_time):
+def onSnapshot(col_snapshot: List[Any], changes: List[Any], read_time: Any) -> None:
+    print(type(read_time))
     for change in changes:
         if change.type.name == "ADDED":
             new_sector = createSectorObject(change.document.to_dict())
@@ -35,5 +37,5 @@ def onSnapshot(col_snapshot, changes, read_time):
             ui.sector_helper.removeFromCache(int(x), int(y))
 
 
-def main():
+def main() -> None:
     sector_collection.on_snapshot(onSnapshot)

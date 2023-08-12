@@ -1,4 +1,3 @@
-import time
 from fireo import models, fields
 
 class Sector(models.Model):

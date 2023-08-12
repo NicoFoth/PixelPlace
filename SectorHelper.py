@@ -75,7 +75,7 @@ class SectorHelper:
         self.sector_cache[f"{x},{y}"] = sector
         return sector
 
-    def getSectors(self, sector_list: list) -> list:
+    def getSectors(self, sector_list: List[str]) -> List[db_handler.Sector.Sector]:
         """
         Returns a list of sectors given a list of sector coordinates.
 
@@ -113,10 +113,7 @@ class SectorHelper:
     
     def getAllSectors(self) -> None:
         """
-        Returns a list of all sectors.
-
-        Returns:
-        - list: A list of sectors.
+        Adds all sectors to the cache.
         """
         all_sectors = db_handler.DB_Handler.getAllSectors()
         for sector in all_sectors:
