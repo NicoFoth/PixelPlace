@@ -122,8 +122,12 @@ def startUI():
 
         mouse_pos = getCurrentCoordinates(pygame.mouse.get_pos())
 
+        bottomRightCell = [topLeftCell[0] + grid_size[0], topLeftCell[1] + grid_size[1]]
+
         # Draw the pixels
-        for sector in sector_helper.sector_cache.values():
+        for sector in sector_helper.getSectorsInViewport(topLeftCell, bottomRightCell):
+            if sector is None:
+                continue
             for pixel in sector.pixels:
                 x, y = pixel.split(",")
                 x = int(x)
