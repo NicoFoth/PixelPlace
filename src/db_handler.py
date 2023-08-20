@@ -2,7 +2,7 @@ import os
 from typing import List
 import firebase_admin, fireo
 from firebase_admin import firestore, credentials
-import Sector
+from src import Sector
 
 cwd = os.getcwd() + "/gcp_key.json"
 
@@ -15,7 +15,7 @@ fireo.connection(from_file=cwd)
 class DB_Handler():
 
     @staticmethod
-    def createSector(x: int, y: int) -> None:
+    def createSector(x: int, y: int) -> Sector.Sector:
         """
         Creates a new sector with the given coordinates and saves it to the database.
 
@@ -34,6 +34,7 @@ class DB_Handler():
         sector.pixels = {}  # type: ignore
         sector.last_update = firestore.SERVER_TIMESTAMP  # type: ignore
         sector.save()
+        return sector
 
     @staticmethod
     def getSector(x: int, y: int) -> Sector.Sector:
@@ -50,33 +51,6 @@ class DB_Handler():
 
         sector = Sector.Sector.collection.get(f"{x},{y}")
         return sector  # type: ignore
-
-    @staticmethod
-    def getSectors(sector_list) -> List[Sector.Sector]:
-        """
-        Retrieves a list of sectors from the database.
-
-        Args:
-            sector_list: A list of sector coordinates in the format [(x1, y1), (x2, y2), ...]
-
-        Returns:
-            list: A list of Sector.Sector objects.
-        """
-
-        sectors = Sector.Sector.collection.get_all(sector_list)
-        return sectors  # type: ignore
-
-    @staticmethod
-    def getAllSectors() -> List[Sector.Sector]:
-        """
-        Returns a list of all sectors.
-
-        Returns:
-        - list: A list of sectors.
-        """
-
-        sectors = Sector.Sector.collection.fetch()
-        return sectors  # type: ignore
 
     @staticmethod
     def updateSector(sector: Sector.Sector) -> None:
