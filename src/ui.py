@@ -11,6 +11,10 @@ def startUI():
     # Initialize Pygame
     pygame.init()
 
+    # Set up the application icon
+    icon = pygame.image.load("application_icon.png")
+    pygame.display.set_icon(icon)
+
     # Set up the window
     window_size_default = (1300, 1000)
     flags = pygame.RESIZABLE
