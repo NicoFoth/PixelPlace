@@ -1,6 +1,7 @@
 from typing import List
 import db_handler
 
+
 class SectorHelper:
 
     sector_size = 64
@@ -22,7 +23,7 @@ class SectorHelper:
         """
 
         self.sector_cache[f"{sector.scoord_x},{sector.scoord_y}"] = sector
-    
+
     def removeFromCache(self, x: int, y: int) -> None:
         """
         Removes the sector at the given coordinates (x, y) from the cache.
@@ -44,7 +45,7 @@ class SectorHelper:
         - y (int): The y-coordinate of the sector.
         """
 
-        return db_handler.DB_Handler.createSector(x, y);
+        return db_handler.DB_Handler.createSector(x, y)
 
     def getSector(self, x: int, y: int) -> db_handler.Sector.Sector:
         """
@@ -70,12 +71,13 @@ class SectorHelper:
         if sector is None:
             self.createSector(x, y)
             sector = db_handler.DB_Handler.getSector(x, y)
-        
+
         # Add the sector to the cache and return it
         self.sector_cache[f"{x},{y}"] = sector
         return sector
 
-    def getSectors(self, sector_list: List[str]) -> List[db_handler.Sector.Sector]:
+    def getSectors(self,
+                   sector_list: List[str]) -> List[db_handler.Sector.Sector]:
         """
         Returns a list of sectors given a list of sector coordinates.
 
@@ -95,22 +97,22 @@ class SectorHelper:
                     sectors.append(self.sector_cache[sector])
             else:
                 to_retrieve.append(sector)
-        
+
         if len(to_retrieve) > 0:
             new_sectors = db_handler.DB_Handler.getSectors(to_retrieve)
-        
+
             for sector in new_sectors:
                 if sector is not None:
                     sector_list.remove(f"{sector.scoord_x},{sector.scoord_y}")
-                    self.sector_cache[f"{sector.scoord_x},{sector.scoord_y}"] = sector
+                    self.sector_cache[
+                        f"{sector.scoord_x},{sector.scoord_y}"] = sector
                     sectors.append(sector)
-            
+
             for non_existing_sector in sector_list:
                 self.sector_cache[non_existing_sector] = None
 
-
         return sectors
-    
+
     def getAllSectors(self) -> None:
         """
         Adds all sectors to the cache.
@@ -118,8 +120,10 @@ class SectorHelper:
         all_sectors = db_handler.DB_Handler.getAllSectors()
         for sector in all_sectors:
             self.sector_cache[f"{sector.scoord_x},{sector.scoord_y}"] = sector
-    
-    def getSectorsInViewport(self, topLeftCell: List[int], bottomRightCell: List[int]) -> List[db_handler.Sector.Sector|None]:
+
+    def getSectorsInViewport(
+            self, topLeftCell: List[int], bottomRightCell: List[int]
+    ) -> List[db_handler.Sector.Sector | None]:
         """
         Returns a list of sectors that are within the given viewport.
 
@@ -167,7 +171,7 @@ class SectorHelper:
         if sector is None:
             self.createSector(scoord_x, scoord_y)
             sector = db_handler.DB_Handler.getSector(scoord_x, scoord_y)
-        sector.pixels[f"{x},{y}"] = color # type: ignore
+        sector.pixels[f"{x},{y}"] = color  # type: ignore
         self.removeFromCache(scoord_x, scoord_y)
         self.addToCache(sector)
         db_handler.DB_Handler.updateSector(sector)

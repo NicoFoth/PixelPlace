@@ -8,5 +8,6 @@ def main() -> None:
     listener_thread.start()
     ui.startUI()
 
+
 if __name__ == "__main__":
     main()

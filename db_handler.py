@@ -13,6 +13,7 @@ fireo.connection(from_file=cwd)
 
 
 class DB_Handler():
+
     @staticmethod
     def createSector(x: int, y: int) -> None:
         """
@@ -27,11 +28,11 @@ class DB_Handler():
         """
 
         sector = Sector.Sector()
-        sector.id = f"{x},{y}" # type: ignore
-        sector.scoord_x = x # type: ignore
-        sector.scoord_y = y # type: ignore
-        sector.pixels = {} # type: ignore
-        sector.last_update = firestore.SERVER_TIMESTAMP # type: ignore
+        sector.id = f"{x},{y}"  # type: ignore
+        sector.scoord_x = x  # type: ignore
+        sector.scoord_y = y  # type: ignore
+        sector.pixels = {}  # type: ignore
+        sector.last_update = firestore.SERVER_TIMESTAMP  # type: ignore
         sector.save()
 
     @staticmethod
@@ -48,7 +49,7 @@ class DB_Handler():
         """
 
         sector = Sector.Sector.collection.get(f"{x},{y}")
-        return sector # type: ignore
+        return sector  # type: ignore
 
     @staticmethod
     def getSectors(sector_list) -> List[Sector.Sector]:
@@ -63,8 +64,8 @@ class DB_Handler():
         """
 
         sectors = Sector.Sector.collection.get_all(sector_list)
-        return sectors # type: ignore
-    
+        return sectors  # type: ignore
+
     @staticmethod
     def getAllSectors() -> List[Sector.Sector]:
         """
@@ -75,7 +76,7 @@ class DB_Handler():
         """
 
         sectors = Sector.Sector.collection.fetch()
-        return sectors # type: ignore
+        return sectors  # type: ignore
 
     @staticmethod
     def updateSector(sector: Sector.Sector) -> None:
@@ -88,6 +89,6 @@ class DB_Handler():
         Returns:
             None
         """
-        
-        sector.last_update = firestore.SERVER_TIMESTAMP # type: ignore
+
+        sector.last_update = firestore.SERVER_TIMESTAMP  # type: ignore
         sector.save()

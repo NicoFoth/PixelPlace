@@ -4,7 +4,9 @@ import db_handler, ui
 
 sector_collection = db_handler.db.collection(u'sector')
 
-def createSectorObject(sector_document: Dict[str, Any]) -> db_handler.Sector.Sector:
+
+def createSectorObject(
+        sector_document: Dict[str, Any]) -> db_handler.Sector.Sector:
     """
     Creates a Sector object from a sector document.
 
@@ -19,11 +21,15 @@ def createSectorObject(sector_document: Dict[str, Any]) -> db_handler.Sector.Sec
     y = sector_document["scoord_y"]
     pixels = sector_document["pixels"]
     last_update = sector_document["last_update"]
-    sector = db_handler.Sector.Sector(scoord_x=x, scoord_y=y, pixels=pixels, last_update=last_update)
+    sector = db_handler.Sector.Sector(scoord_x=x,
+                                      scoord_y=y,
+                                      pixels=pixels,
+                                      last_update=last_update)
     return sector
 
 
-def onSnapshot(col_snapshot: List[Any], changes: List[Any], read_time: Any) -> None:
+def onSnapshot(col_snapshot: List[Any], changes: List[Any],
+               read_time: Any) -> None:
     for change in changes:
         if change.type.name == "ADDED":
             new_sector = createSectorObject(change.document.to_dict())
