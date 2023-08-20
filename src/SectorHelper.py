@@ -1,5 +1,5 @@
 from typing import List
-from src import db_handler
+import db_handler
 
 
 class SectorHelper:
@@ -45,6 +45,38 @@ class SectorHelper:
         - y (int): The y-coordinate of the sector.
         """
         return db_handler.DB_Handler.createSector(x, y)
+
+    def getSectorsInViewport(
+            self, topLeftCell: List[int], bottomRightCell: List[int]
+    ) -> List[db_handler.Sector.Sector | None]:
+        """
+        Returns a list of sectors that are within the given viewport.
+        Args:
+        - min_x (int): The minimum x-coordinate of the viewport.
+        - min_y (int): The minimum y-coordinate of the viewport.
+        - max_x (int): The maximum x-coordinate of the viewport.
+        - max_y (int): The maximum y-coordinate of the viewport.
+        Returns:
+        - list: A list of sectors.
+        """
+        min_x, min_y = topLeftCell
+        max_x, max_y = bottomRightCell
+
+        min_scoord_x = min_x // self.sector_size
+        min_scoord_y = min_y // self.sector_size
+        max_scoord_x = max_x // self.sector_size
+        max_scoord_y = max_y // self.sector_size
+
+        x_range = range(min_scoord_x, max_scoord_x + 1)
+        y_range = range(min_scoord_y, max_scoord_y + 1)
+
+        sector_list = []
+
+        for x in x_range:
+            for y in y_range:
+                sector_list.append(self.sector_cache.get(f"{x},{y}"))
+
+        return sector_list
 
     def drawPixel(self, x: int, y: int, color: tuple) -> None:
         """

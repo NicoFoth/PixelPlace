@@ -2,7 +2,7 @@ import os
 from typing import List
 import firebase_admin, fireo
 from firebase_admin import firestore, credentials
-from src import Sector
+import Sector
 
 cwd = os.getcwd() + "/gcp_key.json"
 
