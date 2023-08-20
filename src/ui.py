@@ -20,10 +20,27 @@ def startUI():
     # Set up the colors
     white = (255, 255, 255)
     black = (0, 0, 0)
-    pixel_colors = [(255, 0, 0), (0, 255, 0), (0, 0, 255)]
+    pixel_colors = [
+        (0, 0, 0),
+        (153, 153, 153),
+        (255, 255, 255),
+        (255, 53, 94),
+        (253, 91, 120),
+        (255, 96, 55),
+        (255, 153, 51),
+        (255, 255, 102),
+        (204, 255, 0),
+        (102, 255, 102),
+        (22, 208, 203),
+        (80, 191, 230),
+        (156, 39, 176),
+        (255, 0, 204),
+    ]
 
     # Set up the grid
-    color_picker_size = (50, 300)
+    color_button_size = (30, 30)
+    color_picker_size = (50,
+                         (color_button_size[1] + 10) * len(pixel_colors) + 10)
     cell_size = [25, 25]
     grid_size = ((screen.get_size()[0] - color_picker_size[0]) // cell_size[0],
                  screen.get_size()[1] // cell_size[1])
@@ -63,20 +80,8 @@ def startUI():
                     sector_helper.drawPixel(x, y,
                                             pixel_colors[current_pixel_color])
                 elif color_picker_rect.collidepoint(x, y):
-                    if y > (screen.get_size()[1] - color_picker_size[1]
-                            ) / 2 + 10 and y < (screen.get_size()[1] -
-                                                color_picker_size[1]) / 2 + 40:
-                        current_pixel_color = 0
-                    elif y > (screen.get_size()[1] -
-                              color_picker_size[1]) / 2 + 60 and y < (
-                                  screen.get_size()[1] -
-                                  color_picker_size[1]) / 2 + 90:
-                        current_pixel_color = 1
-                    elif y > (screen.get_size()[1] -
-                              color_picker_size[1]) / 2 + 110 and y < (
-                                  screen.get_size()[1] -
-                                  color_picker_size[1]) / 2 + 140:
-                        current_pixel_color = 2
+                    y -= color_picker_rect.y
+                    current_pixel_color = y // 40
             elif event.type == pygame.MOUSEBUTTONDOWN and event.button == 2:
                 x, y = event.pos
                 if grid_window.get_rect().collidepoint(x, y):
@@ -170,7 +175,8 @@ def startUI():
             color_rects.append(
                 pygame.Rect(screen.get_size()[0] - color_picker_size[0] + 10,
                             (screen.get_size()[1] - color_picker_size[1]) / 2 +
-                            10 + i * 50, 30, 30))
+                            10 + i * (color_button_size[0] + 10),
+                            color_button_size[1], color_button_size[1]))
         for i in range(len(color_rects)):
             pygame.draw.rect(screen, pixel_colors[i], color_rects[i], 0)
 
@@ -178,7 +184,7 @@ def startUI():
         indicator_rect = pygame.Rect(
             screen.get_size()[0] - color_picker_size[0] + 5,
             (screen.get_size()[1] - color_picker_size[1]) / 2 + 5 +
-            current_pixel_color * 50, 40, 40)
+            current_pixel_color * 40, 40, 40)
         pygame.draw.rect(screen, (0, 0, 0), indicator_rect, 3)
 
         # Draw the current coordinates
