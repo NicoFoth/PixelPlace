@@ -1,0 +1,6 @@
+{
+  "name": "pixelplace-shared",
+  "private": true,
+  "description": "Wire protocol shared by the PixelPlace server and client (source only, no dependencies).",
+  "type": "module"
+}

@@ -1,0 +1,40 @@
+# HTTPS with automatic certificates: Caddy terminates TLS and proxies to the
+# server, which is not published directly. Needs DOMAIN in .env and ports
+# 80 and 443 reachable from the internet.
+#
+#   docker compose -f docker-compose.https.yml up -d
+services:
+  pixelplace:
+    build: .
+    image: pixelplace
+    restart: unless-stopped
+    environment:
+      WIDTH: ${WIDTH:-1000}
+      HEIGHT: ${HEIGHT:-1000}
+      COOLDOWN_SECONDS: ${COOLDOWN_SECONDS:-60}
+      # Cooldowns are per IP: take the client's address from Caddy's
+      # X-Forwarded-For header instead of Caddy's own address.
+      TRUST_PROXY: 'true'
+    volumes:
+      - pixelplace-data:/data
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    depends_on:
+      - pixelplace
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN in .env to the domain pointing at this machine}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  pixelplace-data:
+  caddy-data:
+  caddy-config:

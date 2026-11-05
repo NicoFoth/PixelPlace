@@ -1,0 +1,9 @@
+{
+  "/ws": {
+    "target": "http://localhost:8080",
+    "ws": true
+  },
+  "/config.json": {
+    "target": "http://localhost:8080"
+  }
+}

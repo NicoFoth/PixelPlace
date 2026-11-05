@@ -1,0 +1,136 @@
+<canvas
+  #canvas
+  class="place-view__canvas"
+  [class.place-view__canvas--zoom-in]="color() !== null && zoomedOut()"
+  aria-label="Shared pixel canvas"
+></canvas>
+
+<header class="hud hud--top">
+  <div class="panel server-panel">
+    <span
+      class="status-dot"
+      [class.status-dot--ok]="online()"
+      [attr.title]="online() ? 'Connected' : 'Not connected'"
+    ></span>
+    <span class="server-panel__label" [title]="session().address.wsUrl">{{
+      session().address.label
+    }}</span>
+    @if (online()) {
+      <span class="server-panel__online">{{ session().online() }} online</span>
+    }
+    <button type="button" class="button button--small" (click)="leave.emit()">Switch</button>
+  </div>
+
+  <label class="panel nickname">
+    <span class="nickname__label">Name</span>
+    <input
+      class="input input--bare"
+      [value]="settings.nickname()"
+      (input)="setNickname($event)"
+      maxlength="20"
+      placeholder="anonymous"
+      autocomplete="nickname"
+      spellcheck="false"
+      enterkeyhint="done"
+    />
+  </label>
+</header>
+
+@if (status(); as s) {
+  <div
+    class="status"
+    [class.status--overlay]="s.kind === 'overlay'"
+    [class.status--banner]="s.kind === 'banner'"
+  >
+    <div class="panel status__card" role="status">
+      <p>{{ s.text }}</p>
+      @if (s.canRetry || s.canLeave) {
+        <div class="status__actions">
+          @if (s.canRetry) {
+            <button type="button" class="button button--small" (click)="session().retryNow()">
+              Retry now
+            </button>
+          }
+          @if (s.canLeave) {
+            <button type="button" class="button button--small" (click)="leave.emit()">
+              Choose another server
+            </button>
+          }
+        </div>
+      }
+    </div>
+  </div>
+}
+
+@if (board()) {
+  <footer class="hud hud--bottom">
+    <div class="toasts" aria-live="polite">
+      @for (toast of toasts(); track toast.id) {
+        <div class="panel toast">{{ toast.text }}</div>
+      }
+    </div>
+
+    <div class="hud__left">
+      @if (session().inspected(); as pixel) {
+        <pp-pixel-info
+          [pixel]="pixel"
+          [info]="session().pixelInfo()"
+          [palette]="palette()"
+          (close)="closeInfo()"
+        />
+      }
+      <div class="panel coords" aria-live="off">
+        @if (hover(); as h) {
+          <span>({{ h.x }}, {{ h.y }})</span>
+        } @else {
+          <span class="muted">{{ board()!.width }} × {{ board()!.height }}</span>
+        }
+        <span class="muted">{{ zoomLabel() }}</span>
+      </div>
+    </div>
+
+    <pp-palette
+      [colors]="palette()"
+      [selected]="color()"
+      [cooldownEndsAt]="session().cooldownEndsAt()"
+      [cooldownMs]="session().cooldownMs()"
+      [target]="target()"
+      [touch]="touch()"
+      [zoomedOut]="zoomedOut()"
+      (select)="selectColor($event)"
+      (confirm)="confirmPlacement()"
+    />
+
+    <div class="hud__right">
+      <div class="panel zoom-controls">
+        <button
+          type="button"
+          class="icon-button"
+          aria-label="Zoom out"
+          title="Zoom out (−)"
+          (click)="zoomBy(1 / 1.5)"
+        >
+          −
+        </button>
+        <button
+          type="button"
+          class="icon-button"
+          aria-label="Zoom in"
+          title="Zoom in (+)"
+          (click)="zoomBy(1.5)"
+        >
+          +
+        </button>
+        <button
+          type="button"
+          class="icon-button"
+          aria-label="Show whole canvas"
+          title="Show whole canvas"
+          (click)="fit()"
+        >
+          ⤢
+        </button>
+      </div>
+    </div>
+  </footer>
+}

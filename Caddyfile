@@ -1,0 +1,6 @@
+# Used by docker-compose.https.yml. Caddy obtains and renews the certificate
+# for $DOMAIN and passes WebSocket upgrades through on its own.
+{$DOMAIN} {
+	encode zstd gzip
+	reverse_proxy pixelplace:8080
+}

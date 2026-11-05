@@ -1,0 +1,18 @@
+# Plain HTTP on port 8080 (or $PORT). For HTTPS with your own domain,
+# use docker-compose.https.yml instead.
+services:
+  pixelplace:
+    build: .
+    image: pixelplace
+    restart: unless-stopped
+    ports:
+      - '${PORT:-8080}:8080'
+    environment:
+      WIDTH: ${WIDTH:-1000}
+      HEIGHT: ${HEIGHT:-1000}
+      COOLDOWN_SECONDS: ${COOLDOWN_SECONDS:-60}
+    volumes:
+      - pixelplace-data:/data
+
+volumes:
+  pixelplace-data:
