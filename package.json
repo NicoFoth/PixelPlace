@@ -1,0 +1,16 @@
+{
+  "name": "pixelplace",
+  "private": true,
+  "description": "A shared pixel canvas: a self-hostable server and a static web client.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "setup": "npm ci --prefix server && npm ci --prefix client",
+    "dev": "node scripts/dev.mjs",
+    "build": "npm run build --prefix client",
+    "start": "npm start --prefix server",
+    "typecheck": "npm run typecheck --prefix server"
+  }
+}
